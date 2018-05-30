@@ -15,11 +15,11 @@ const div = document.createElement('div');
         </header>
     `;
     const startButton = document.querySelector('.button');
+    //listening for click on start game button
     startDiv.addEventListener('click', (e) => {
         const element = e.target;
         if(element.tagName === 'A') {
-            startDiv.removeAttribute('class');
-            startDiv.innerHTML = '';
+            startDiv.remove();
         }
     });
 }())
