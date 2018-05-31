@@ -15,12 +15,19 @@ h1 {
   text-align: left;
   width: 1.875em; }
 
+input {
+  border-radius: 5px; 
+  border: none;
+  padding: .2em;
+}
+
 .button {
   background: #fff;
   border-radius: 4px;
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
   display: inline-block;
   padding: 1.25em 3em;
+  margin-bottom: .5em;
   text-decoration: none;
   -webkit-transition: 0.25s ease;
   transition: 0.25s ease; }
@@ -110,6 +117,18 @@ h1 {
     background: #FFA000; }
   #player2.active {
     background: #3688C3; }
+
+.flex_div {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: space-around;
+  padding: 3em;
+}
+
+.info_div {
+  padding: 3em;
+}
 
 .boxes {
   width: 480px;
