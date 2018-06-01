@@ -19,6 +19,7 @@ input {
   border-radius: 5px; 
   border: none;
   padding: .2em;
+  margin-bottom: 1.5em;
 }
 
 .button {
@@ -33,6 +34,19 @@ input {
   transition: 0.25s ease; }
   .button:hover {
     color: #000; }
+
+    .button_block {
+      background: #fff;
+      border-radius: 4px;
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+      display: block;
+      padding: 1.25em 3em;
+      margin-bottom: .5em;
+      text-decoration: none;
+      -webkit-transition: 0.25s ease;
+      transition: 0.25s ease; }
+      .button_block:hover {
+        color: #000; }
 
 .screen {
   text-align: center;
@@ -121,14 +135,12 @@ input {
 .flex_div {
   display: flex;
   flex-wrap: wrap;
+  flex-direction: column;
   align-content: center;
   justify-content: space-around;
   padding: 3em;
 }
 
-.info_div {
-  padding: 3em;
-}
 
 .boxes {
   width: 480px;
