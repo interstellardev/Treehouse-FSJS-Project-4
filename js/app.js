@@ -6,6 +6,7 @@ const label = document.createElement('label');
 const button = document.createElement('a');
 const h4 = document.createElement('h4');
 const playerBoxes = document.querySelector('ul');
+const box = document.getElementsByClassName('box');
 
 const player1 = {
     name: '',
@@ -96,7 +97,7 @@ function showHideEl(el, displayType) {
             }
             playerBoxes.children[0].innerHTML += player1.name;
             playerBoxes.children[1].innerHTML += player2.name;
-            randomPlayer();
+            playerFirst();
         }
     });
 }())
@@ -107,5 +108,28 @@ function randomPlayer() {
     return whosTurn;
 }
     
+function playerFirst() {
+    if(randomPlayer() === 1) {
+        playerBoxes.children[0].classList.add('players-turn', 'active');
+        player1.isTurn = true;
+        player2.isTurn = false;
+    } else {
+        playerBoxes.children[1].classList.add('players-turn', 'active');
+        player1.isTurn = false;
+        player2.isTurn = true;
+    }
+}
 
+(function(){
+    for(let i = 0; i < box.length; i++) {
+        box[i].addEventListener('click', (e) => {
+            if(player1.turn === true) {
+                e.target.classList.add('box-filled-1');
+            } 
+            if(player2.turn === true) {
+                e.target.classList.add('box-filled-2');
+            }
+        })
+    }
+}())
 
