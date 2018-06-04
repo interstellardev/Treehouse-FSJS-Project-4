@@ -11,14 +11,14 @@ const box = document.getElementsByClassName('box');
 const player1 = {
     name: '',
     score: 0, 
-    turn: false,
+    isTurn: false,
     boxSelections: []
 };
 
 const player2 = {
     name: '',
     score: 0,
-    turn: true,
+    isTurn: false,
     boxSelections: []
 };
 
@@ -123,21 +123,42 @@ function playerFirst() {
 (function(){
     for(let i = 0; i < box.length; i++) {
         box[i].addEventListener('click', (e) => {
-            const choice = box.indexOf(box[i]);
+            // const isChosen = e.target.getAttribute('data-chosen');
             if(player1.isTurn === true) {
                 e.target.classList.add('box-filled-1');
+                // e.target.setAttribute('data-chosen', 'true');
                 player1.isTurn = false;
                 player2.isTurn = true;
                 playerBoxes.children[1].classList.add('players-turn', 'active');
                 playerBoxes.children[0].classList.remove('players-turn', 'active');
-            } else {
+            } 
+            if(player2.isTurn === true) {
+                e.target.classList.add('box-filled-2');
+                // e.target.setAttribute('data-chosen', 'true');
                 playerBoxes.children[0].classList.add('players-turn', 'active');
                 playerBoxes.children[1].classList.remove('players-turn', 'active');
-                e.target.classList.add('box-filled-2');
                 player1.isTurn = true;
                 player2.isTurn = false;
             }
-        })
+        });
+        // box[i].addEventListener('mouseover', (e) => {
+        //     const isChosen = e.target.getAttribute('data-chosen');
+        //     if(player1.isTurn === true && !isChosen ) {
+        //         e.target.classList.add('box-filled-1');
+        //     } 
+        //     if(player2.isTurn === true && !isChosen ) {
+        //         e.target.classList.add('box-filled-2');
+        //     }
+        // });
+        // box[i].addEventListener('mouseout', (e) => {
+        //     const isChosen = e.target.getAttribute('data-chosen');
+        //     if(player1.isTurn === true && !isChosen ) {
+        //         e.target.classList.remove('box-filled-1');
+        //     } 
+        //     if(player2.isTurn === true && !isChosen ) {
+        //         e.target.classList.remove('box-filled-2');
+        //     }
+        // });
     }
 }())
 
