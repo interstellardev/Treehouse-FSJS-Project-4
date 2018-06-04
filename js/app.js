@@ -123,11 +123,19 @@ function playerFirst() {
 (function(){
     for(let i = 0; i < box.length; i++) {
         box[i].addEventListener('click', (e) => {
-            if(player1.turn === true) {
+            const choice = box.indexOf(box[i]);
+            if(player1.isTurn === true) {
                 e.target.classList.add('box-filled-1');
-            } 
-            if(player2.turn === true) {
+                player1.isTurn = false;
+                player2.isTurn = true;
+                playerBoxes.children[1].classList.add('players-turn', 'active');
+                playerBoxes.children[0].classList.remove('players-turn', 'active');
+            } else {
+                playerBoxes.children[0].classList.add('players-turn', 'active');
+                playerBoxes.children[1].classList.remove('players-turn', 'active');
                 e.target.classList.add('box-filled-2');
+                player1.isTurn = true;
+                player2.isTurn = false;
             }
         })
     }
