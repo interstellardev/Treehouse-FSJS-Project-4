@@ -4,16 +4,21 @@ const div = document.createElement('div');
 const input = document.createElement('input');
 const label = document.createElement('label');
 const button = document.createElement('a');
+const h4 = document.createElement('h4');
+const playerBoxes = document.querySelector('ul');
+
 const player1 = {
     name: '',
     score: 0, 
-    turn: false
+    turn: false,
+    boxSelections: []
 };
 
 const player2 = {
     name: '',
     score: 0,
-    turn: true
+    turn: true,
+    boxSelections: []
 };
 
 
@@ -25,11 +30,10 @@ function setAttributes(elem) {
     }
 }
 
-// show/hide element
+// show/hide elements
 function showHideEl(el, displayType) {
     el.style.display = displayType;
 }
-
 
 // controlling start screen 
 (function() {
@@ -56,6 +60,7 @@ function showHideEl(el, displayType) {
     const playerTwoButton = document.getElementById('twoPlayer');
     const playerOneInput = document.getElementById('playerOneName');
     const playerTwoInput = document.getElementById('playerTwoName');
+    
     //initially hiding the start button until needed
     showHideEl(startButton, 'none');
     showHideEl(playerOneInput, 'none');
@@ -69,7 +74,7 @@ function showHideEl(el, displayType) {
             showHideEl(playerTwoButton, 'none');
             showHideEl(playerOneInput, 'block');
             startButton.removeAttribute('style');
-            player2.name = 'computer'
+            player2.name = 'Computer'
         }
         if (element.id === 'twoPlayer') {
             showHideEl(playerOneButton, 'none');
@@ -79,11 +84,28 @@ function showHideEl(el, displayType) {
             startButton.removeAttribute('style');
         }
         if (element.id === 'start_button') {
-            console.log(playerOneInput.value.length);
-            if(playerOneInput.value.length > 0 && player2.name === 'computer') {
+            if(playerOneInput.value.length > 0 && player2.name === 'Computer') {
                 player1.name = playerOneInput.value;
                 startDiv.remove();
             }
+            if(playerOneInput.value.length > 0 && playerTwoInput.value.length > 0){
+                player1.name = playerOneInput.value;
+                player2.name = playerTwoInput.value;
+                startDiv.remove();
+
+            }
+            playerBoxes.children[0].innerHTML += player1.name;
+            playerBoxes.children[1].innerHTML += player2.name;
+            randomPlayer();
         }
     });
 }())
+
+// function for picking a random number between 1 and 2. Using this for who goes first.
+function randomPlayer() {
+    const whosTurn = Math.floor((Math.random() * 2) + 1 );
+    return whosTurn;
+}
+    
+
+
