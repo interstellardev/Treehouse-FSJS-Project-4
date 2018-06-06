@@ -7,21 +7,33 @@ const button = document.createElement('a');
 const h4 = document.createElement('h4');
 const playerBoxes = document.querySelector('ul');
 const box = document.getElementsByClassName('box');
+const boxParent = document.querySelector('.boxes');
 
 const player1 = {
     name: '',
     score: 0, 
     isTurn: false,
-    boxSelections: []
+    playerChoices: []
 };
 
 const player2 = {
     name: '',
     score: 0,
     isTurn: false,
-    boxSelections: []
+    playerChoices: []
 };
 
+
+const waysToWin = {
+    0 : [0,1,2],
+    1 : [3,4,5],
+    2 : [6,7,8],
+    3 : [0,3,6],
+    4 : [1,4,7],
+    5 : [2,5,8],
+    6 : [0,4,8],
+    7 : [2,4,6]
+}
 
 // ********* HELPER FUNCTIONS ***********************
 // this function sets as many attributes one needs on an element
@@ -107,7 +119,8 @@ function randomPlayer() {
     const whosTurn = Math.floor((Math.random() * 2) + 1 );
     return whosTurn;
 }
-    
+
+// this function assigns the random number, picking who the first player will be
 function playerFirst() {
     if(randomPlayer() === 1) {
         playerBoxes.children[0].classList.add('players-turn', 'active');
@@ -120,45 +133,70 @@ function playerFirst() {
     }
 }
 
+// this function finds whose turn it is and lets player pick a box if it has not been picked
 (function(){
-    for(let i = 0; i < box.length; i++) {
+    for(let i = 0; i < box.length; i++) { 
         box[i].addEventListener('click', (e) => {
-            // const isChosen = e.target.getAttribute('data-chosen');
-            if(player1.isTurn === true) {
+            const isChosen = e.target.hasAttribute('data-chosen');
+            if(player1.isTurn === true && !isChosen) {
                 e.target.classList.add('box-filled-1');
-                // e.target.setAttribute('data-chosen', 'true');
-                player1.isTurn = false;
-                player2.isTurn = true;
+                e.target.setAttribute('data-chosen', 'true')
                 playerBoxes.children[1].classList.add('players-turn', 'active');
                 playerBoxes.children[0].classList.remove('players-turn', 'active');
-            } 
-            if(player2.isTurn === true) {
+                player1.isTurn = false;
+                player2.isTurn = true;
+                player1.playerChoices.push(i);
+                if(compareArray(player1.playerChoices, waysToWin)) {
+                    console.log('player 1');
+                }
+            } else if(player2.isTurn === true && !isChosen) {
                 e.target.classList.add('box-filled-2');
-                // e.target.setAttribute('data-chosen', 'true');
+                e.target.setAttribute('data-chosen', 'true')
                 playerBoxes.children[0].classList.add('players-turn', 'active');
                 playerBoxes.children[1].classList.remove('players-turn', 'active');
                 player1.isTurn = true;
                 player2.isTurn = false;
+                player2.playerChoices.push(i);
+                if(compareArray(player1.playerChoices, waysToWin)) {
+                    console.log('player 2');
+                }
+            }
+            
+        });
+        box[i].addEventListener('mouseover', (e) => {
+            const isChosen = e.target.hasAttribute('data-chosen');
+            if(player1.isTurn === true && !isChosen ) {
+                e.target.classList.add('box-filled-1');
+            } else if(player2.isTurn === true && !isChosen ) {
+                e.target.classList.add('box-filled-2');
             }
         });
-        // box[i].addEventListener('mouseover', (e) => {
-        //     const isChosen = e.target.getAttribute('data-chosen');
-        //     if(player1.isTurn === true && !isChosen ) {
-        //         e.target.classList.add('box-filled-1');
-        //     } 
-        //     if(player2.isTurn === true && !isChosen ) {
-        //         e.target.classList.add('box-filled-2');
-        //     }
-        // });
-        // box[i].addEventListener('mouseout', (e) => {
-        //     const isChosen = e.target.getAttribute('data-chosen');
-        //     if(player1.isTurn === true && !isChosen ) {
-        //         e.target.classList.remove('box-filled-1');
-        //     } 
-        //     if(player2.isTurn === true && !isChosen ) {
-        //         e.target.classList.remove('box-filled-2');
-        //     }
-        // });
-    }
+        box[i].addEventListener('mouseout', (e) => {
+            const isChosen = e.target.hasAttribute('data-chosen');
+            if(player1.isTurn === true && !isChosen ) {
+                e.target.classList.remove('box-filled-1');
+            } else if(player2.isTurn === true && !isChosen ) {
+                e.target.classList.remove('box-filled-2');
+            }
+        });
+    } 
 }())
+
+//checking to see if player has won by comparing choices to possible win senarios
+function compareArray(array1, obj) {
+    const playersPicks = array1.sort().toString()
+    for (let possible in obj) {
+        ways = obj[possible].sort().toString();
+        // console.log(playersPicks);
+        // console.log(ways);
+        if (ways === playersPicks) {
+            console.log('true');
+            return true;
+        } else {
+            console.log(false);
+            return false;
+        }
+    }
+    
+}
 
