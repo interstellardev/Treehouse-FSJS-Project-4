@@ -13,14 +13,16 @@ const player1 = {
     name: '',
     score: 0, 
     isTurn: false,
-    playerChoices: []
+    playerChoices: [],
+    isComputer: false
 };
 
 const player2 = {
     name: '',
     score: 0,
     isTurn: false,
-    playerChoices: []
+    playerChoices: [],
+    isComputer: false
 };
 
 
@@ -48,7 +50,7 @@ function showHideEl(el, displayType) {
     el.style.display = displayType;
 }
 
-// controlling start screen 
+// controlling start screen and end screen
 (function() {
     body.appendChild(div).setAttribute('id', 'start');
     const startDiv = document.getElementById('start');
@@ -65,6 +67,8 @@ function showHideEl(el, displayType) {
             </div>
         </header>
     `;
+
+   
     
     const choiceContainer = document.getElementById('playerChoice');
     const headerStart = document.getElementById('startHead');
@@ -88,6 +92,7 @@ function showHideEl(el, displayType) {
             showHideEl(playerOneInput, 'block');
             startButton.removeAttribute('style');
             player2.name = 'Computer'
+            player2.isComputer = true;
         }
         if (element.id === 'twoPlayer') {
             showHideEl(playerOneButton, 'none');
@@ -130,11 +135,15 @@ function playerFirst() {
         playerBoxes.children[1].classList.add('players-turn', 'active');
         player1.isTurn = false;
         player2.isTurn = true;
+        if(player2.isComputer){
+            computer();
+        }
     }
 }
 
 // this function finds whose turn it is and lets player pick a box if it has not been picked
 (function(){
+    let turns = 0;
     for(let i = 0; i < box.length; i++) { 
         box[i].addEventListener('click', (e) => {
             const isChosen = e.target.hasAttribute('data-chosen');
@@ -146,10 +155,14 @@ function playerFirst() {
                 player1.isTurn = false;
                 player2.isTurn = true;
                 player1.playerChoices.push(i);
+                turns += 1;
                 if(compareArray(player1.playerChoices, waysToWin)) {
-                    console.log('player 1');
+                    won(player1.name);
                 }
-            } else if(player2.isTurn === true && !isChosen) {
+                if(player2.isComputer && turns < 9 && !isChosen) {
+                    computer();
+                } 
+            } else if(player2.isTurn === true && !isChosen && !player2.isComputer) {
                 e.target.classList.add('box-filled-2');
                 e.target.setAttribute('data-chosen', 'true')
                 playerBoxes.children[0].classList.add('players-turn', 'active');
@@ -157,9 +170,10 @@ function playerFirst() {
                 player1.isTurn = true;
                 player2.isTurn = false;
                 player2.playerChoices.push(i);
-                if(compareArray(player1.playerChoices, waysToWin)) {
-                    console.log('player 2');
-                }
+                turns += 1;
+                if(compareArray(player2.playerChoices, waysToWin)) {
+                    won(player2.name);
+                }    
             }
             
         });
@@ -179,24 +193,75 @@ function playerFirst() {
                 e.target.classList.remove('box-filled-2');
             }
         });
-    } 
+    }
 }())
+
 
 //checking to see if player has won by comparing choices to possible win senarios
 function compareArray(array1, obj) {
-    const playersPicks = array1.sort().toString()
-    for (let possible in obj) {
+    const playersPicks = array1.sort().toString();
+    for (const possible in obj) {
         ways = obj[possible].sort().toString();
-        // console.log(playersPicks);
-        // console.log(ways);
         if (ways === playersPicks) {
-            console.log('true');
             return true;
-        } else {
-            console.log(false);
-            return false;
-        }
+        } 
     }
-    
 }
 
+//displays who won the game
+function won(playerWon) {
+    body.appendChild(div).setAttribute('id', 'finish');
+    const finishDiv = document.getElementById('finish');
+    finishDiv.classList.add('screen', 'screen-win');
+    finishDiv.innerHTML = `
+        <header>
+            <h1>Tic Tac Toe</h1>
+            <p class="message">${playerWon} wins!!</p>
+            <a href="#" class="button" id="reset">New game</a>
+        </header>
+    `;
+    const resetButton = document.getElementById('reset');
+    resetButton.addEventListener('click', (e) => {
+        location.reload();
+    })
+};
+
+//shows draw screen if nobody wins
+function draw() {
+    body.appendChild(div).setAttribute('id', 'finish');
+    const finishDiv = document.getElementById('finish');
+    finishDiv.classList.add('screen', 'screen-win');
+    finishDiv.innerHTML = `
+        <header>
+            <h1>Tic Tac Toe</h1>
+            <p class="message">It's a draw. Boo!</p>
+            <a href="#" class="button" id="reset">New game</a>
+        </header>
+    `;
+    const resetButton = document.getElementById('reset');
+    resetButton.addEventListener('click', (e) => {
+        location.reload();
+    })
+}
+
+// This dictates the computer play
+function computer() {
+    const compChoice = Math.floor(Math.random() * 10) -1;
+    
+    for (let i=0; i < box.length; i++){
+        const isChosen = box[i].hasAttribute('data-chosen');
+        if (i === compChoice && !isChosen ) {
+            box[i].setAttribute('data-chosen', 'true')
+            box[i].classList.add('box-filled-2');
+        } 
+    }
+    playerBoxes.children[0].classList.add('players-turn', 'active');
+    playerBoxes.children[1].classList.remove('players-turn', 'active');
+    player1.isTurn = true;
+    player2.isTurn = false;
+    player2.playerChoices.push(compChoice);
+    if(compareArray(player2.playerChoices, waysToWin)) {
+        won(player2.name);
+    }
+    console.log(compChoice);
+}
