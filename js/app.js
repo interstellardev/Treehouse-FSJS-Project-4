@@ -9,6 +9,8 @@ const playerBoxes = document.querySelector('ul');
 const box = document.getElementsByClassName('box');
 const boxParent = document.querySelector('.boxes');
 
+let turns = 0;
+
 const player1 = {
     name: '',
     score: 0, 
@@ -143,7 +145,6 @@ function playerFirst() {
 
 // this function finds whose turn it is and lets player pick a box if it has not been picked
 (function(){
-    let turns = 0;
     for(let i = 0; i < box.length; i++) { 
         box[i].addEventListener('click', (e) => {
             const isChosen = e.target.hasAttribute('data-chosen');
@@ -164,6 +165,7 @@ function playerFirst() {
                 }
                 if(player2.isComputer) {
                     computer();
+                    turns += 1;
                 }
             } else if(player2.isTurn === true && !isChosen && !player2.isComputer) {
                 e.target.classList.add('box-filled-2');
@@ -177,7 +179,7 @@ function playerFirst() {
                 if(compareArray(player2.playerChoices, waysToWin)) {
                     won(player2.name);
                 }
-                if(turns === 9 && !compareArray(player2.playerChoices, waysToWin)) {
+                if(turns === 8 && !compareArray(player2.playerChoices, waysToWin)) {
                     draw();
                 }    
             }
