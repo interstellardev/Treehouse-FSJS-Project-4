@@ -136,7 +136,7 @@ function playerFirst() {
         player1.isTurn = false;
         player2.isTurn = true;
         if(player2.isComputer){
-            computer();
+            setTimeout(() => computer(), 1500);
         }
     }
 }
@@ -149,7 +149,7 @@ function playerFirst() {
             const isChosen = e.target.hasAttribute('data-chosen');
             if(player1.isTurn === true && !isChosen) {
                 e.target.classList.add('box-filled-1');
-                e.target.setAttribute('data-chosen', 'true')
+                e.target.setAttribute('data-chosen', 'true');
                 playerBoxes.children[1].classList.add('players-turn', 'active');
                 playerBoxes.children[0].classList.remove('players-turn', 'active');
                 player1.isTurn = false;
@@ -159,9 +159,12 @@ function playerFirst() {
                 if(compareArray(player1.playerChoices, waysToWin)) {
                     won(player1.name);
                 }
-                if(player2.isComputer && turns < 9 && !isChosen) {
-                    computer();
-                } 
+                if(turns ===9 && !compareArray(player1.playerChoices, waysToWin)) {
+                    draw();
+                }
+                if(player2.isComputer) {
+                    setTimeout(() => computer(), 1500);
+                }
             } else if(player2.isTurn === true && !isChosen && !player2.isComputer) {
                 e.target.classList.add('box-filled-2');
                 e.target.setAttribute('data-chosen', 'true')
@@ -173,6 +176,9 @@ function playerFirst() {
                 turns += 1;
                 if(compareArray(player2.playerChoices, waysToWin)) {
                     won(player2.name);
+                }
+                if(turns === 9 && !compareArray(player2.playerChoices, waysToWin)) {
+                    draw();
                 }    
             }
             
@@ -197,16 +203,28 @@ function playerFirst() {
 }())
 
 
+
 //checking to see if player has won by comparing choices to possible win senarios
 function compareArray(array1, obj) {
-    const playersPicks = array1.sort().toString();
     for (const possible in obj) {
-        ways = obj[possible].sort().toString();
-        if (ways === playersPicks) {
-            return true;
-        } 
+        let counter = 0;
+        const ways = obj[possible];
+        for(let i = 0; i < ways.length; i++){
+            const items = ways[i];
+            for (let i = 0; i < array1.length; i++) {
+                const pChoice = array1[i];
+                if (pChoice === items) {
+                    counter += 1;
+                    if (counter === 3) {
+                        return true;
+                        break;
+                    }
+                }
+            }
+        }
     }
 }
+
 
 //displays who won the game
 function won(playerWon) {
@@ -244,24 +262,37 @@ function draw() {
     })
 }
 
+//function that returns a random number
+function random() {
+    const randomNum = Math.floor(Math.random() * 10) -1;
+    return randomNum;
+}
+
+
 // This dictates the computer play
 function computer() {
-    const compChoice = Math.floor(Math.random() * 10) -1;
-    
+    let compChoice = random();
+    let checkGood = false;
     for (let i=0; i < box.length; i++){
         const isChosen = box[i].hasAttribute('data-chosen');
         if (i === compChoice && !isChosen ) {
-            box[i].setAttribute('data-chosen', 'true')
+            box[i].setAttribute('data-chosen', 'true');
             box[i].classList.add('box-filled-2');
+            checkGood = true;
+            break;
         } 
     }
-    playerBoxes.children[0].classList.add('players-turn', 'active');
-    playerBoxes.children[1].classList.remove('players-turn', 'active');
-    player1.isTurn = true;
-    player2.isTurn = false;
-    player2.playerChoices.push(compChoice);
-    if(compareArray(player2.playerChoices, waysToWin)) {
-        won(player2.name);
+    
+    if (checkGood) {
+        playerBoxes.children[0].classList.add('players-turn', 'active');
+        playerBoxes.children[1].classList.remove('players-turn', 'active');
+        player1.isTurn = true;
+        player2.isTurn = false;
+        player2.playerChoices.push(compChoice);
+        if(compareArray(player2.playerChoices, waysToWin)) {
+            won(player2.name);
+        }
+    } else {
+        computer();
     }
-    console.log(compChoice);
 }
