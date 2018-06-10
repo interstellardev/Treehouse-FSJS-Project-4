@@ -136,7 +136,7 @@ function playerFirst() {
         player1.isTurn = false;
         player2.isTurn = true;
         if(player2.isComputer){
-            setTimeout(() => computer(), 1500);
+            computer();
         }
     }
 }
@@ -163,7 +163,7 @@ function playerFirst() {
                     draw();
                 }
                 if(player2.isComputer) {
-                    setTimeout(() => computer(), 1500);
+                    computer();
                 }
             } else if(player2.isTurn === true && !isChosen && !player2.isComputer) {
                 e.target.classList.add('box-filled-2');
