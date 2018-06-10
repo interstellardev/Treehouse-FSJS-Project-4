@@ -231,6 +231,11 @@ function won(playerWon) {
     body.appendChild(div).setAttribute('id', 'finish');
     const finishDiv = document.getElementById('finish');
     finishDiv.classList.add('screen', 'screen-win');
+    if(playerWon === player1.name) {
+        finishDiv.style.backgroundColor = '#FFA000';
+    } else {
+        finishDiv.style.backgroundColor = '#3688C3';
+    }
     finishDiv.innerHTML = `
         <header>
             <h1>Tic Tac Toe</h1>
