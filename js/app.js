@@ -292,6 +292,9 @@ function computer() {
         if(compareArray(player2.playerChoices, waysToWin)) {
             won(player2.name);
         }
+        if(turns === 9 && !compareArray(player2.playerChoices, waysToWin)) {
+            draw();
+        }    
     } else {
         computer();
     }
