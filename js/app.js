@@ -9,12 +9,13 @@ const playerBoxes = document.querySelector('ul');
 const box = document.getElementsByClassName('box');
 const boxParent = document.querySelector('.boxes');
 
+
 let turns = 0;
 
 const player1 = {
     name: '',
     score: 0, 
-    isTurn: false,
+    isTurn: true,
     playerChoices: [],
     isComputer: false
 };
@@ -28,31 +29,27 @@ const player2 = {
 };
 
 
-const waysToWin = {
-    0 : [0,1,2],
-    1 : [3,4,5],
-    2 : [6,7,8],
-    3 : [0,3,6],
-    4 : [1,4,7],
-    5 : [2,5,8],
-    6 : [0,4,8],
-    7 : [2,4,6]
-}
+const waysToWin = [
+    [0,1,2],
+    [3,4,5],
+    [6,7,8],
+    [0,3,6],
+    [1,4,7],
+    [2,5,8],
+    [0,4,8],
+    [2,4,6]
+]
 
 // ********* HELPER FUNCTIONS ***********************
-// this function sets as many attributes one needs on an element
-function setAttributes(elem) {
-    for (var i = 1; i < arguments.length; i+=2) {
-        elem.setAttribute(arguments[i], arguments[i+1]);
-    }
-}
 
 // show/hide elements
-function showHideEl(el, displayType) {
-    el.style.display = displayType;
+function showHideEl(element, displayType) {
+    element.style.display = displayType;
 }
 
-// controlling start screen and end screen
+
+// ********* START SCREEN ***********************
+// this function creates star screen
 (function() {
     body.appendChild(div).setAttribute('id', 'start');
     const startDiv = document.getElementById('start');
@@ -69,9 +66,14 @@ function showHideEl(el, displayType) {
             </div>
         </header>
     `;
-
+    eventStart(startDiv);
+}());
    
     
+    
+    
+//listening for events on start button
+function eventStart(div) {
     const choiceContainer = document.getElementById('playerChoice');
     const headerStart = document.getElementById('startHead');
     const startButton = document.getElementById('start_button');
@@ -79,21 +81,19 @@ function showHideEl(el, displayType) {
     const playerTwoButton = document.getElementById('twoPlayer');
     const playerOneInput = document.getElementById('playerOneName');
     const playerTwoInput = document.getElementById('playerTwoName');
-    
     //initially hiding the start button until needed
     showHideEl(startButton, 'none');
     showHideEl(playerOneInput, 'none');
     showHideEl(playerTwoInput, 'none');
-
     //listening for click on start game button
-    startDiv.addEventListener('click', (e) => {
+    div.addEventListener('click', (e) => {
         const element = e.target;
         if (element.id === 'onePlayer') {
             showHideEl(playerOneButton, 'none');
             showHideEl(playerTwoButton, 'none');
             showHideEl(playerOneInput, 'block');
             startButton.removeAttribute('style');
-            player2.name = 'Computer'
+            player2.name = 'Computer';
             player2.isComputer = true;
         }
         if (element.id === 'twoPlayer') {
@@ -104,44 +104,16 @@ function showHideEl(el, displayType) {
             startButton.removeAttribute('style');
         }
         if (element.id === 'start_button') {
-            if(playerOneInput.value.length > 0 && player2.name === 'Computer') {
-                player1.name = playerOneInput.value;
-                startDiv.remove();
-            }
-            if(playerOneInput.value.length > 0 && playerTwoInput.value.length > 0){
-                player1.name = playerOneInput.value;
-                player2.name = playerTwoInput.value;
-                startDiv.remove();
-
-            }
+            player1.name = playerOneInput.value;
+            player2.name = playerTwoInput.value;
+            div.remove();
             playerBoxes.children[0].innerHTML += player1.name;
             playerBoxes.children[1].innerHTML += player2.name;
-            playerFirst();
+            playerBoxes.children[0].classList.add('players-turn', 'active');
         }
     });
-}())
-
-// function for picking a random number between 1 and 2. Using this for who goes first.
-function randomPlayer() {
-    const whosTurn = Math.floor((Math.random() * 2) + 1 );
-    return whosTurn;
 }
-
-// this function assigns the random number, picking who the first player will be
-function playerFirst() {
-    if(randomPlayer() === 1) {
-        playerBoxes.children[0].classList.add('players-turn', 'active');
-        player1.isTurn = true;
-        player2.isTurn = false;
-    } else {
-        playerBoxes.children[1].classList.add('players-turn', 'active');
-        player1.isTurn = false;
-        player2.isTurn = true;
-        if(player2.isComputer){
-            computer();
-        }
-    }
-}
+    
 
 // this function finds whose turn it is and lets player pick a box if it has not been picked
 (function(){
@@ -157,10 +129,10 @@ function playerFirst() {
                 player2.isTurn = true;
                 player1.playerChoices.push(i);
                 turns += 1;
-                if(compareArray(player1.playerChoices, waysToWin)) {
+                if(checkForWin(player1.playerChoices, waysToWin)) {
                     won(player1.name);
                 }
-                if(turns ===9 && !compareArray(player1.playerChoices, waysToWin)) {
+                if(turns === 8 && !checkForWin(player1.playerChoices, waysToWin)) {
                     draw();
                 }
                 if(player2.isComputer) {
@@ -176,10 +148,10 @@ function playerFirst() {
                 player2.isTurn = false;
                 player2.playerChoices.push(i);
                 turns += 1;
-                if(compareArray(player2.playerChoices, waysToWin)) {
+                if(checkForWin(player2.playerChoices, waysToWin)) {
                     won(player2.name);
                 }
-                if(turns === 8 && !compareArray(player2.playerChoices, waysToWin)) {
+                if(turns === 8 && !checkForWin(player2.playerChoices, waysToWin)) {
                     draw();
                 }    
             }
@@ -188,17 +160,17 @@ function playerFirst() {
         box[i].addEventListener('mouseover', (e) => {
             const isChosen = e.target.hasAttribute('data-chosen');
             if(player1.isTurn === true && !isChosen ) {
-                e.target.classList.add('box-filled-1');
+                e.target.style.backgroundImage = 'url("../img/o.svg")';
             } else if(player2.isTurn === true && !isChosen ) {
-                e.target.classList.add('box-filled-2');
+                e.target.style.backgroundImage = 'url("../img/x.svg")';
             }
         });
         box[i].addEventListener('mouseout', (e) => {
             const isChosen = e.target.hasAttribute('data-chosen');
             if(player1.isTurn === true && !isChosen ) {
-                e.target.classList.remove('box-filled-1');
+                e.target.style.backgroundImage = '';
             } else if(player2.isTurn === true && !isChosen ) {
-                e.target.classList.remove('box-filled-2');
+                e.target.style.backgroundImage = '';
             }
         });
     }
@@ -207,24 +179,13 @@ function playerFirst() {
 
 
 //checking to see if player has won by comparing choices to possible win senarios
-function compareArray(array1, obj) {
-    for (const possible in obj) {
+function checkForWin(playerChoicesNow, possibleWins) {
         let counter = 0;
-        const ways = obj[possible];
-        for(let i = 0; i < ways.length; i++){
-            const items = ways[i];
-            for (let i = 0; i < array1.length; i++) {
-                const pChoice = array1[i];
-                if (pChoice === items) {
-                    counter += 1;
-                    if (counter === 3) {
-                        return true;
-                        break;
-                    }
-                }
-            }
-        }
-    }
+        possibleWins.forEach(element => {
+            element.map(op1 => {
+                
+            });
+        });
 }
 
 
@@ -296,10 +257,10 @@ function computer() {
         player1.isTurn = true;
         player2.isTurn = false;
         player2.playerChoices.push(compChoice);
-        if(compareArray(player2.playerChoices, waysToWin)) {
+        if(checkForWin(player2.playerChoices, waysToWin)) {
             won(player2.name);
         }
-        if(turns === 9 && !compareArray(player2.playerChoices, waysToWin)) {
+        if(turns === 9 && !checkForWin(player2.playerChoices, waysToWin)) {
             draw();
         }    
     } else {
