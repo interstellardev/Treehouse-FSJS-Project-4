@@ -89,6 +89,7 @@ function eventStart(div) {
     div.addEventListener('click', (e) => {
         const element = e.target;
         if (element.id === 'onePlayer') {
+            console.log(element.id);        
             showHideEl(playerOneButton, 'none');
             showHideEl(playerTwoButton, 'none');
             showHideEl(playerOneInput, 'block');
@@ -132,7 +133,7 @@ function eventStart(div) {
                 if(checkForWin(player1.playerChoices, waysToWin)) {
                     won(player1.name);
                 }
-                if(turns === 8 && !checkForWin(player1.playerChoices, waysToWin)) {
+                if(turns === 9 && !checkForWin(player1.playerChoices, waysToWin)) {
                     draw();
                 }
                 if(player2.isComputer) {
@@ -151,7 +152,7 @@ function eventStart(div) {
                 if(checkForWin(player2.playerChoices, waysToWin)) {
                     won(player2.name);
                 }
-                if(turns === 8 && !checkForWin(player2.playerChoices, waysToWin)) {
+                if(turns === 9 && !checkForWin(player2.playerChoices, waysToWin)) {
                     draw();
                 }    
             }
@@ -177,15 +178,27 @@ function eventStart(div) {
 }())
 
 
+// simple function that compares arrays for like values regardless of order
+function compareArray(array1, array2) {
+    let compared = [];
+    array1.forEach(item1 => {
+        array2.forEach(item2 => {
+            if(item1 === item2) {
+                compared.push(item2);
+            }
+        })
+    })
+    return compared.length;
+}
 
 //checking to see if player has won by comparing choices to possible win senarios
 function checkForWin(playerChoicesNow, possibleWins) {
-        let counter = 0;
-        possibleWins.forEach(element => {
-            element.map(op1 => {
-                
-            });
-        });
+    for(let i = 0; i < possibleWins.length; i++) {
+        if(compareArray(possibleWins[i], playerChoicesNow) >= 3) {
+            return true;
+            break;
+        }
+    }
 }
 
 
