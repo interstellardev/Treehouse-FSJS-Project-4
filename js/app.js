@@ -171,9 +171,9 @@ function eventStart(div) {
         box[i].addEventListener('mouseover', (e) => {
             const isChosen = e.target.hasAttribute('data-chosen');
             if(player1.isTurn === true && !isChosen ) {
-                e.target.style.backgroundImage = 'url("../img/o.svg")';
+                e.target.style.backgroundImage = 'url("img/o.svg")';
             } else if(player2.isTurn === true && !isChosen ) {
-                e.target.style.backgroundImage = 'url("../img/x.svg")';
+                e.target.style.backgroundImage = 'url("img/x.svg")';
             }
         });
         box[i].addEventListener('mouseout', (e) => {
