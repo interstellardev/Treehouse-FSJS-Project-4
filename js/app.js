@@ -106,7 +106,9 @@ function eventStart(div) {
         }
         if (element.id === 'start_button') {
             player1.name = playerOneInput.value;
-            player2.name = playerTwoInput.value;
+            if (!player2.isComputer) {
+                player2.name = playerTwoInput.value;
+            }
             div.remove();
             playerBoxes.children[0].innerHTML += player1.name;
             playerBoxes.children[1].innerHTML += player2.name;
