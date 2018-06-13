@@ -147,7 +147,7 @@ function eventStart(div) {
                     draw();
                 }
                 if(player2.isComputer) {
-                    computer();
+                    setTimeout(() => computer(), 1500);
                     turns += 1;
                 }
             } else if(player2.isTurn === true && !isChosen && !player2.isComputer) {
