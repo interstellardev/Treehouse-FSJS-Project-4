@@ -172,7 +172,7 @@ function eventStart(div) {
             const isChosen = e.target.hasAttribute('data-chosen');
             if(player1.isTurn === true && !isChosen ) {
                 e.target.style.backgroundImage = 'url("img/o.svg")';
-            } else if(player2.isTurn === true && !isChosen ) {
+            } else if(player2.isTurn === true && !isChosen && !isComputer) {
                 e.target.style.backgroundImage = 'url("img/x.svg")';
             }
         });
@@ -180,7 +180,7 @@ function eventStart(div) {
             const isChosen = e.target.hasAttribute('data-chosen');
             if(player1.isTurn === true && !isChosen ) {
                 e.target.style.backgroundImage = '';
-            } else if(player2.isTurn === true && !isChosen ) {
+            } else if(player2.isTurn === true && !isChosen && !isComputer) {
                 e.target.style.backgroundImage = '';
             }
         });
