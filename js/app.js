@@ -105,8 +105,16 @@ function eventStart(div) {
             startButton.removeAttribute('style');
         }
         if (element.id === 'start_button') {
-            player1.name = playerOneInput.value;
-            if (!player2.isComputer) {
+            if(playerOneInput.value.length === 0) {
+                player1.name = 'Player 1';
+            }
+            if(playerTwoInput.value.length === 0 && !player2.isComputer) {
+                player2.name = 'Player 2';
+            }
+            if(playerOneInput.value.length > 0) {
+                player1.name = playerOneInput.value;
+            }
+            if (playerTwoInput.value.length > 0 && !player2.isComputer) {
                 player2.name = playerTwoInput.value;
             }
             div.remove();
