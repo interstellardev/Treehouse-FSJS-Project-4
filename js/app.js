@@ -143,7 +143,7 @@ function eventStart(div) {
                 player1.playerChoices.push(i);
                 turns += 1;
                 if(checkForWin(player1.playerChoices, waysToWin)) {
-                    won(player1.name);
+                    setTimeout(() => won(player1.name), 750);
                 }
                 if(turns === 9 && !checkForWin(player1.playerChoices, waysToWin)) {
                     draw();
@@ -162,10 +162,10 @@ function eventStart(div) {
                 player2.playerChoices.push(i);
                 turns += 1;
                 if(checkForWin(player2.playerChoices, waysToWin)) {
-                    won(player2.name);
+                    setTimeout(() => won(player2.name), 750);
                 }
                 if(turns === 9 && !checkForWin(player2.playerChoices, waysToWin)) {
-                    draw();
+                    setTimeout(() => draw(), 750);
                 }    
             }
             
@@ -283,10 +283,10 @@ function computer() {
         player2.isTurn = false;
         player2.playerChoices.push(compChoice);
         if(checkForWin(player2.playerChoices, waysToWin)) {
-            won(player2.name);
+            setTimeout(() => won(player2.name), 650);
         }
         if(turns === 9 && !checkForWin(player2.playerChoices, waysToWin)) {
-            draw();
+            setTimeout(() => draw(), 650);
         }    
     } else {
         computer();
