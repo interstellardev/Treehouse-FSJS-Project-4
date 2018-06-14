@@ -96,6 +96,7 @@ function eventStart(div) {
             startButton.removeAttribute('style');
             player2.name = 'Computer';
             player2.isComputer = true;
+            playerOneInput.focus();
         }
         if (element.id === 'twoPlayer') {
             showHideEl(playerOneButton, 'none');
@@ -103,6 +104,7 @@ function eventStart(div) {
             showHideEl(playerOneInput, 'block');
             showHideEl(playerTwoInput, 'block');
             startButton.removeAttribute('style');
+            playerOneInput.focus();
         }
         if (element.id === 'start_button') {
             if(playerOneInput.value.length === 0) {
